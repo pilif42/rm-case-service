@@ -1,0 +1,10 @@
+<not:caseNotifications xmlns:not="http://ons.gov.uk/ctp/response/casesvc/message/notification">
+  <!--1 or more repetitions:-->
+  <caseNotification>
+    <!--Optional:-->
+    <caseId>string</caseId>
+    <!--Optional:-->
+    <actionPlanId>string</actionPlanId>
+    <notificationType>DEACTIVATED</notificationType>
+  </caseNotification>
+</not:caseNotifications>
