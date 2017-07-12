@@ -1,16 +1,18 @@
 info:
-  contactEmail: philippe.brossier@ons.gov.uk
+  name: ${project.artifactId}
   version: ${project.version}
+  origin: ${scm.url}
   commit: ${buildNumber}
   branch: ${scmBranch}
-  buildTime: ${timestamp}
+  built: ${timestamp}
 
 # logging config here as a reminder as to how to override logback from cmd line
 # ie -Dlogging.level.org.springframework=DEBUG
 logging:
   level:
     uk.gov.ons.ctp: DEBUG
-    uk.gov.ons.ctp.response.casesvc.service.impl.CaseServiceImpl: DEBUG
+    org.springframework.retry: ERROR
+    org.springframework.integration.handler.advice: ERROR
     org.springframework.cloud.sleuth.instrument.messaging.MessagingSpanExtractor: ERROR
     org.springframework.context.annotation.ConfigurationClassPostProcessor: ERROR
   profile: DEV
@@ -30,8 +32,6 @@ security:
     password: secret
 
 management:
-  port: 8271
-  context-path: /mgmt
   security:
     roles: SUPERUSER
     enabled: true
@@ -61,7 +61,7 @@ endpoints:
     sensitive: true
   info:
     enabled: true
-    sensitive: true
+    sensitive: false
   metrics:
     enabled: true
     sensitive: true
@@ -107,8 +107,8 @@ spring:
 
 data-grid:
   address: localhost:6379
-  list-time-to-live-seconds: 600
-  list-time-to-wait-seconds: 600
+  list-time-to-live-seconds: 60
+  list-time-to-wait-seconds: 60
 
 internet-access-code-svc:
   iac-post-path: /iacs
@@ -166,6 +166,9 @@ rabbitmq:
   virtualhost: /
 
 messaging:
+  backoffInitial: 5000
+  backoffMultiplier: 3
+  backoffMax: 45000
   consumingThreads: 1
   pubMaxAttempts: 3
   conMaxAttempts: 3
