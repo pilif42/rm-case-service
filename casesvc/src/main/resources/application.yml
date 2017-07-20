@@ -10,7 +10,7 @@ info:
 # ie -Dlogging.level.org.springframework=DEBUG
 logging:
   level:
-    uk.gov.ons.ctp: DEBUG
+    uk.gov.ons.ctp: WARN
     org.springframework.retry: ERROR
     org.springframework.integration.handler.advice: ERROR
     org.springframework.cloud.sleuth.instrument.messaging.MessagingSpanExtractor: ERROR
@@ -21,7 +21,7 @@ liquibase:
   user: casesvc
   password: casesvc
   default-schema: casesvc
-  url: jdbc:postgresql://localhost:5432/postgres
+  url: jdbc:postgresql://localhost:6432/postgres
   changeLog: classpath:/database/changelog-master.yml
 
 security:
@@ -85,7 +85,7 @@ spring:
     sampler:
       percentage: 10
   datasource:
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://localhost:6432/postgres
     username: casesvc
     password: casesvc
     driverClassName: org.postgresql.Driver
@@ -106,9 +106,10 @@ spring:
     enabled: false
 
 data-grid:
-  address: localhost:6379
+  address: localhost:7379
   list-time-to-live-seconds: 60
   list-time-to-wait-seconds: 60
+  report-lock-time-to-live-seconds: 300
 
 internet-access-code-svc:
   iac-post-path: /iacs
@@ -147,9 +148,7 @@ collection-exercise-svc:
     read-timeout-milli-seconds: 5000
 
 case-distribution:
-  iac-max: 50
   retrieval-max: 50
-  distribution-max: 10
   retry-sleep-seconds: 3
   delay-milli-seconds: 500
 
@@ -162,7 +161,7 @@ rabbitmq:
   username: guest
   password: guest
   host: localhost
-  port: 5672
+  port: 6672
   virtualhost: /
 
 messaging:
@@ -175,9 +174,12 @@ messaging:
   prefetchCount: 10
   txSize: 1
 
+report-settings:
+  cron-expression: "0 * * * * *"
+
 swagger-settings:
   swagger-ui-active: true
-  group-name: "caseservice-api"
-  title: "Case Service API"
-  description: "API for the Case Service"
-  version: "10.41"
+  group-name: caseservice-api
+  title: Case Service API
+  description: API for ${project.artifactId}
+  version: ${project.version}
