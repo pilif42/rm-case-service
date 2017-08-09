@@ -75,9 +75,6 @@ endpoints:
 spring:
   application:
     name: ONS CaseService
-  sleuth:
-    sampler:
-      percentage: 10
   datasource:
     driverClassName: org.postgresql.Driver
     tomcat:
@@ -94,9 +91,6 @@ spring:
     properties:
       hibernate:
         ddl-auto: update
-
-  zipkin:
-    enabled: false
 
 data-grid:
   address: ${cloud.services.redis.connection.host}:${cloud.services.redis.connection.port}
@@ -140,7 +134,6 @@ collection-exercise-svc:
 
 case-distribution:
   retrieval-max: 50
-  retry-sleep-seconds: 3
   delay-milli-seconds: 500
 
 redelivery-policy:
