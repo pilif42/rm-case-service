@@ -28,7 +28,11 @@ import uk.gov.ons.ctp.response.casesvc.service.InternetAccessCodeSvcClientServic
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static uk.gov.ons.ctp.response.casesvc.service.impl.CaseServiceImpl.CORRELATION_DATA_ID;
+import static uk.gov.ons.ctp.response.casesvc.service.impl.CaseServiceImpl.METHOD_CASE_DISTRIBUTOR_PROCESS_CASE;
 
 /**
  * This is the 'service' class that distributes cases to the action service. It has a number of injected beans,
@@ -178,19 +182,24 @@ public class CaseDistributor {
    *
    * @param caze the case to deal with
    * @param iac the IAC to assign to the Case
+   * @throws CTPException when transitionCase does.
    */
   @Transactional(propagation = Propagation.REQUIRES_NEW, readOnly = false, rollbackFor = Exception.class)
   private void processCase(final Case caze, final String iac) throws CTPException {
+    UUID caseID = caze.getId();
     log.info("processing caseid {}", caze.getId());
 
     CaseDTO.CaseEvent event = null;
-    switch (caze.getState()) {
+    CaseState initialState = caze.getState();
+    switch (initialState) {
       case SAMPLED_INIT:
         event = CaseDTO.CaseEvent.ACTIVATED;
         break;
       case REPLACEMENT_INIT:
         event = CaseDTO.CaseEvent.REPLACED;
         break;
+      default:
+        log.error("Unexpected state found {}", initialState);
     }
 
     Case updatedCase = transitionCase(caze, event);
@@ -199,7 +208,8 @@ public class CaseDistributor {
 
     CaseNotification caseNotification = caseService.prepareCaseNotification(caze, event);
     log.debug("Publishing caseNotification...");
-    notificationPublisher.sendNotification(caseNotification);
+    notificationPublisher.sendNotification(caseNotification,
+        String.format(CORRELATION_DATA_ID, METHOD_CASE_DISTRIBUTOR_PROCESS_CASE, updatedCase.getId(), initialState));
   }
 
   /**

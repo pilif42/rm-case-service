@@ -1,0 +1,27 @@
+- Publish to queue:
+
+
+- scenario all ok:
+    - BespokeConfirmCallback.confirm called.
+            - log = confirming message with ack true - cause null - correlationDataId 551308fb-2d5a-4477-92c3-649d915834c3,ACTIONABLE
+
+
+- scenario RabbitMQ down:
+    - BespokeConfirmCallback & BespokeReturnCallback NOT called.
+    - TX is working though.
+
+
+- scenario only queue is deleted:
+    - BespokeReturnCallback.returnedMessage is called.
+           - log = Delivery of message to queue failed. Cause is NO_ROUTE.
+    - BespokeConfirmCallback.confirm is called.
+            - log = confirming message with ack true - cause null - correlationDataId 551308fb-2d5a-4477-92c3-649d915834c3,SAMPLED_INIT
+            - ack = true is correct as the message reached the exchange.
+
+
+- scenario exchange is deleted:
+    - BespokeConfirmCallback.confirm is called with ack = FALSE.
+
+
+- note that calls to BespokeReturnCallback & BespokeConfirmCallback are asynchronous so not done within the TX on testTransactionalBehaviour.
+

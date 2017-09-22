@@ -5,9 +5,15 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
   http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.6.xsd">
 
-    <rabbit:connection-factory id="connectionFactory"
-    host="${rabbitmq.host}" username="${rabbitmq.username}" password="${rabbitmq.password}" virtual-host="${rabbitmq.virtualhost}" port="${rabbitmq.port}"/>
+	<!-- When using publisher confirms, the cache size needs to be large enough otherwise channels can be closed before confirms are received. -->
+	<!-- TODO Make the channel cache size a param. Suitable value is?-->
+	<rabbit:connection-factory id="connectionFactoryWithConfirmsEnabled"
+							   host="${rabbitmq.host}" username="${rabbitmq.username}" password="${rabbitmq.password}" virtual-host="${rabbitmq.virtualhost}" port="${rabbitmq.port}" channel-cache-size="100" publisher-confirms="true" publisher-returns="true"/>
+	<rabbit:template id="amqpTemplateWithConfirmsEnabled" connection-factory="connectionFactoryWithConfirmsEnabled" retry-template="retryTemplate" />
+	<rabbit:admin id="amqpAdminWithConfirmsEnabled" connection-factory="connectionFactoryWithConfirmsEnabled"/>
 
+    <rabbit:connection-factory id="connectionFactory"
+							   host="${rabbitmq.host}" username="${rabbitmq.username}" password="${rabbitmq.password}" virtual-host="${rabbitmq.virtualhost}" port="${rabbitmq.port}" />
     <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" retry-template="retryTemplate" />
     <rabbit:admin id="amqpAdmin" connection-factory="connectionFactory"/>
 

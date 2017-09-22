@@ -16,6 +16,9 @@
         <property name="contentType" value="text/xml" />
     </bean>
 
-    <rabbit:template id="caseNotificationRabbitTemplate" connection-factory="connectionFactory" exchange="case-outbound-exchange" routing-key="Case.LifecycleEvents.binding"
-                     message-converter="caseNotificationMarshallingMessageConverter" channel-transacted="true"/>
+    <rabbit:template id="caseNotificationRabbitTemplate" connection-factory="connectionFactoryWithConfirmsEnabled" exchange="case-outbound-exchange" routing-key="Case.LifecycleEvents.binding"
+                     message-converter="caseNotificationMarshallingMessageConverter" mandatory="true" confirm-callback="bespokeConfirmCallback" return-callback="bespokeReturnCallback"/>
+
+    <bean id="bespokeConfirmCallback" class="uk.gov.ons.ctp.response.casesvc.utility.BespokeConfirmCallback" />
+    <bean id="bespokeReturnCallback" class="uk.gov.ons.ctp.response.casesvc.utility.BespokeReturnCallback" />
 </beans>

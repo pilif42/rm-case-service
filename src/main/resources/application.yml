@@ -10,10 +10,8 @@ info:
 # ie -Dlogging.level.org.springframework=DEBUG
 logging:
   level:
-    uk.gov.ons.ctp: ERROR
-    org.springframework.retry: ERROR
-    org.springframework.integration.handler.advice: ERROR
-    org.springframework.context.annotation.ConfigurationClassPostProcessor: ERROR
+    uk.gov.ons.ctp: INFO
+    org.springframework: ERROR
   profile: DEV
 
 liquibase:
@@ -25,7 +23,8 @@ liquibase:
 
 security:
   basic:
-    enabled: false
+    enabled: true
+    realm: sdc
   user:
     name: admin
     password: secret
@@ -43,36 +42,10 @@ server:
   servlet-path: /
 
 endpoints:
-  autoconfig:
-    enabled: true
-    sensitive: true
-  beans:
-    enabled: true
-    sensitive: true
-  configprops:
-    enabled: true
-    sensitive: true
-  dump:
-    enabled: true
-    sensitive: true
-  env:
-    enabled: true
-    sensitive: true
+  enabled: true
   info:
     enabled: true
     sensitive: false
-  metrics:
-    enabled: true
-    sensitive: true
-  mappings:
-    enabled: true
-    sensitive: true
-  shutdown:
-    enabled: true
-    sensitive: true
-  trace:
-    enabled: true
-    sensitive: true
 
 spring:
   output:
@@ -111,6 +84,8 @@ internet-access-code-svc:
     scheme: http
     host: localhost
     port: 8121
+    username: admin
+    password: secret
 
 action-svc:
   actions-path: /actions
@@ -118,6 +93,8 @@ action-svc:
     scheme: http
     host: localhost
     port: 8151
+    username: admin
+    password: secret
     
 collection-exercise-svc:
   collection-exercise-path: /collectionexercises/{exerciseId}
@@ -125,6 +102,8 @@ collection-exercise-svc:
     scheme: http
     host: localhost
     port: 8145
+    username: admin
+    password: secret
 
 case-distribution:
   retrieval-max: 50

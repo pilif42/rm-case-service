@@ -15,10 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
+import uk.gov.ons.ctp.common.rest.RestUtility;
 import uk.gov.ons.ctp.response.casesvc.config.AppConfig;
 
 import uk.gov.ons.ctp.response.casesvc.service.InternetAccessCodeSvcClientService;
-import uk.gov.ons.ctp.response.casesvc.utility.RestUtility;
 import uk.gov.ons.ctp.response.iac.representation.CreateInternetAccessCodeDTO;
 import uk.gov.ons.ctp.response.iac.representation.InternetAccessCodeDTO;
 import uk.gov.ons.ctp.response.iac.representation.UpdateInternetAccessCodeDTO;
@@ -67,7 +67,7 @@ public class InternetAccessCodeSvcClientServiceImpl implements InternetAccessCod
     UriComponents uriComponents = restUtility.createUriComponents(appConfig.getInternetAccessCodeSvc().getIacPutPath(),
         null, iac);
     HttpEntity<UpdateInternetAccessCodeDTO> httpEntity = restUtility.createHttpEntity(
-        new UpdateInternetAccessCodeDTO("SYSTEM"));
+        new UpdateInternetAccessCodeDTO(SYSTEM));
 
     restTemplate.exchange(uriComponents.toUri(), HttpMethod.PUT, httpEntity, InternetAccessCodeDTO.class);
     log.debug("gone past the call to the IAC Svc...");
