@@ -11,7 +11,7 @@ import uk.gov.ons.ctp.response.casesvc.representation.CaseDTO.CaseEvent;
 import uk.gov.ons.ctp.response.casesvc.representation.CaseDTO.CaseState;
 
 /**
- * This is the state transition manager actory for the actionsvc. It intended
+ * This is the state transition manager factory for the caseSvc. It is intended
  * that this will be refactored into a common framework class and that it
  * initialises each entities manager from database held transitions.
  */
